@@ -1,0 +1,92 @@
+1) overview of streaming technologies
+2) sturucted streaming
+3)Development Life cycle
+4) Kafka and spark structured --integration 
+
+Important Concepts
+
+Sources-->
+
+
+oprations --> 
+
+o/p Modes(Append,Update,Complete)
+
+
+Sinks/Targets ---->
+
+
+
+RDD:
+
+1) RDD can consideered a set of java objects
+2) Supports two type of operations ---Transformations and Actions
+3) Transformations create a new RDD from existing one, While action return the value
+   to Driver aftre a computation on intial RDD.
+4) The core of sparks paradigm is "laziness" (Transformations are effectively computed when an action is performed)
+5) Being RDD's are composed of java objects, they offer a familiar of object
+   oriented programming style. RDD's API's allow low-level processing on the data structure:
+   map,filter,reduce, are the most common operations to manipulate RDD objects using the typical
+   object-oriented and fuctional programming features offered by "Scala".
+6) Advantage of RDDs is taht they are compile-type safe.
+
+7) Since RDDs contain java objects they suffer from "Garbage" and "Java serilization issues" which are expensive when
+    data grows.
+    
+8) Unlikely Spark doesnt offer any built-in optimization to speed up this kind of processes.
+
+bcoz of this dataframes are introduced.
+
+
+DataFrame:
+
+1) Spark SQL is a Spark module for structured data processing which allows
+   the usage of SQL queries.
+   
+2) At conceputal level it is equivalent to table in Relational Database and pandas in python.
+3) In scala, dataframe is a structured dataset of Row objects.
+4) A row is a generic untyped java object.
+
+5) DF's can be constructed from diff sources: Structred data files, Hive tables,
+   tables from external databases or even existing RDDs.
+   
+ 6) Compared to RDDs, DataFrames offer a "higher level of abstraction"
+ 7) In fact, DataFrames can be treated as tables. Spark 
+   SQL provides APIs to run SQL queries on DataFrames with a simple 
+   SQL-like syntax.
+   
+ 8) Unlike RDD's, Dataframes come out with couple of optimizations.
+ 
+ The first one is the Catalyst query optimizer, an engine which interprets 
+ Spark code and builds an optimized logical and physical query plan.
+ The second one is the Tungsten optimizer which implements the off-heap 
+ storage mechanism. Tungsten optimizer provides serialization into the 
+ off-heap storage so that transformations perform directly on this off-heap memory, 
+ avoiding serialization costs associated with standard Java or Kryo serializers. 
+ Tungsten also offers the whole-stage code generator, a component that converts 
+ the optimized physical plan into Java bytecode to be run on each executor.
+ 
+ These optimizations highly speed up the execution time of Spark jobs in terms 
+ of CPU and memory efficiency, 
+ considerably reducing the thrash policies of the Garbage Collector.
+ 
+ Unfortunately, DataFrames are not type safe: type is checked only at runtime. 
+ For example, if you accidentally select the wrong column when writing a 
+ query plan with DataFrames, the compiler does not complain and the error is 
+ only detected when the application is run. This is a tedious problem for 
+ Spark developers since it significantly lengthens 
+ the development process. To face this issue, Spark library introduced Datasets.
+
+
+DataSet:
+
+A Dataset is a distributed collection of data which combines the benefits of RDDs
+ and the power of Spark SQL engine. 
+ Indeed, Spark Datasets offer both the OOP interface for transformations 
+ and the SQL one to run queries. Datasets are very similar to RDDs: 
+ they can be constructed by reading data from external sources or parallelizing
+ a set of Java objects.
+ 
+Datasets are a good choice when dealing with structured or semi-structured data: 
+a tabular representation is automatically deduced by Spark as long as you 
+provide the type of the single data object in a Scala case class
